@@ -19,6 +19,9 @@
           info() { printf "\n%s %s\n\n" "$( ${pkgs.coreutils}/bin/date )" "$*" >&2; }
           trap 'echo $( ${pkgs.coreutils}/bin/date ) Backup interrupted >&2; exit 2' INT TERM
 
+          info "Creating tmp"
+          ${pkgs.coreutils}/bin/mkdir /tmp && ${pkgs.coreutils}/bin/chmod 777 /tmp
+
           info "Starting backup"
 
           # Backup the most important directories into an archive named after
