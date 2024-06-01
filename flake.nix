@@ -16,8 +16,8 @@
         borg-task = pkgs.writeShellScriptBin "borg-entrypoint"
           ''
           # some helpers and error handling:
-          info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
-          trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
+          info() { printf "\n%s %s\n\n" "$( ${pkgs.coreutils}/bin/date )" "$*" >&2; }
+          trap 'echo $( ${pkgs.coreutils}/bin/date ) Backup interrupted >&2; exit 2' INT TERM
 
           info "Starting backup"
 
@@ -75,6 +75,11 @@
           name = "ghcr.io/jobs62/borg-container";
           config = {
             Cmd = [ "${borg-task}/bin/borg-entrypoint" ];
+          };
+          copyToRoot = pkgs.buildEnv {
+            name = "image-root";
+            paths = [ pkgs.fakeNss pkgs.openssh ];
+            pathsToLink = [ "/bin" "/etc" ];
           };
         };
       in {
