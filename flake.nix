@@ -11,6 +11,19 @@
       let
         pkgs = import nixpkgs {
           inherit system;
+          overlays = [
+            (
+              final: prev: {
+                openssh = prev.openssh.overrideAttrs(oldAttrs: {
+                  patches =
+                    (oldAttrs.patches or [])
+                    ++ [
+                      ./ssh.patch
+                    ];
+                });
+              }
+            )
+          ];
         };
 
         borg-task = pkgs.writeShellScriptBin "borg-entrypoint"
@@ -18,9 +31,6 @@
           # some helpers and error handling:
           info() { printf "\n%s %s\n\n" "$( ${pkgs.coreutils}/bin/date )" "$*" >&2; }
           trap 'echo $( ${pkgs.coreutils}/bin/date ) Backup interrupted >&2; exit 2' INT TERM
-
-          info "Patching permissions"
-          ${pkgs.coreutils}/bin/chmod -R 500 /config || true 
 
           info "Starting backup"
 

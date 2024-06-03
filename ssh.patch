@@ -1,0 +1,15 @@
+diff '--color=auto' -ru ssh_origin/authfile.c ssh/authfile.c
+--- ssh_origin/authfile.c	2023-03-14 08:26:25.000000000 +0100
++++ ssh/authfile.c	2024-06-03 08:17:18.744897463 +0200
+@@ -123,8 +123,9 @@
+ 	if ((fd = open(filename, O_RDONLY)) == -1)
+ 		return SSH_ERR_SYSTEM_ERROR;
+ 
+-	r = sshkey_perm_ok(fd, filename);
+-	if (r != 0)
++	//r = sshkey_perm_ok(fd, filename);
++	r = 0;
++    if (r != 0)
+ 		goto out;
+ 
+ 	r = sshkey_load_private_type_fd(fd, type, passphrase, keyp, commentp);
