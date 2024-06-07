@@ -75,13 +75,14 @@
 
           if [ ''${global_exit} -eq 0 ]; then
               info "Backup, Prune, and Compact finished successfully"
+              exit 0
           elif [ ''${global_exit} -eq 1 ]; then
               info "Backup, Prune, and/or Compact finished with warnings"
+              exit 0
           else
               info "Backup, Prune, and/or Compact finished with errors"
-          fi
-
-          exit ''${global_exit}        
+              exit 1
+          fi      
           '';
 
         borg-image = pkgs.dockerTools.buildImage {
